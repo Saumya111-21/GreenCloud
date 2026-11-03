@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greencloud
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: greencloud
+  template:
+    metadata:
+      labels:
+        app: greencloud
+    spec:
+      containers:
+        - name: greencloud
+          image: greencloud:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
