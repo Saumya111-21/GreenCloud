@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: greencloud
-          image: greencloud:latest
+          image: greencloud:v3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
