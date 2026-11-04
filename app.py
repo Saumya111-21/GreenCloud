@@ -7,10 +7,26 @@ app = Flask(__name__)
 CPU_REQUEST_M = 100  # what we reserved in deployment.yaml
 REPLICAS = 2
 
+import time
+
+def read_cpu_usec():
+    # the container's own CPU time, in microseconds
+    try:
+        with open("/sys/fs/cgroup/cpu.stat") as f:
+            for line in f:
+                if line.startswith("usage_usec"):
+                    return int(line.split()[1])
+    except FileNotFoundError:
+        pass
+    return None
+
 def get_advice():
-    cpu_percent = psutil.cpu_percent(interval=1)
-    # convert whole-machine percent to a rough "millicores used" value
-    cpu_used_m = cpu_percent / 100 * psutil.cpu_count() * 1000
+    start = read_cpu_usec()
+    time.sleep(1)
+    end = read_cpu_usec()
+    if start is None or end is None:
+        return 0.0, ["Could not read container CPU usage here."]
+    cpu_used_m = (end - start) / 1000  # microseconds per second -> millicores
     return advise(REPLICAS, cpu_used_m, CPU_REQUEST_M, max(cpu_used_m, 1))
 
 @app.route("/")
