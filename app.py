@@ -4,7 +4,7 @@ from advisor import advise
 
 app = Flask(__name__)
 
-CPU_REQUEST_M = 100  # what we reserved in deployment.yaml
+CPU_REQUEST_M = 10  # what we reserved in deployment.yaml
 REPLICAS = 2
 
 import time

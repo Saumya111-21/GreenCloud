@@ -14,14 +14,15 @@ spec:
     spec:
       containers:
         - name: greencloud
-          image: greencloud:v4
+          image: greencloud:v5
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
+          
           resources:
             requests:
-              cpu: "100m"
+              cpu: "10m"
               memory: "64Mi"
             limits:
-              cpu: "250m"
+              cpu: "100m"
               memory: "128Mi"
