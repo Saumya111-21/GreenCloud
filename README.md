@@ -318,9 +318,7 @@ tests/test_verification.py::test_full_audit_consistency PASSED           [100%]
 
 ---
 
-## 8. Academic Viva & Presentation Defense Guide
-
-Frequently asked questions and technical answers for your project evaluation:
+## 8. Technical Overview
 
 ### Q1: What makes GreenCloud different from standard Kubernetes metrics-server or Prometheus?
 > **Answer:** `metrics-server` and Prometheus only provide raw telemetry (e.g. "pod X uses 40m CPU"). They do not interpret efficiency, calculate financial waste, or estimate carbon emissions. GreenCloud sits on top of telemetry to calculate **PUE-adjusted power draw (Watts)**, **regional grid emissions ($gCO_2e$)**, and **FinOps dollar savings**, converting numbers into actionable, peak-aware Kubernetes right-sizing patches.
