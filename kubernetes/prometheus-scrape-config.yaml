@@ -1,0 +1,32 @@
+# Prometheus Scrape Configuration for GreenCloud Monitoring Platform
+# Use in prometheus.yml under scrape_configs:
+
+scrape_configs:
+  - job_name: 'greencloud'
+    scrape_interval: 5s
+    scrape_timeout: 4s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['greencloud-service:8080']
+        labels:
+          environment: 'production'
+          app: 'greencloud'
+          tier: 'observability'
+
+---
+# Optional: ServiceMonitor for Prometheus Operator
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: greencloud-servicemonitor
+  labels:
+    release: prometheus
+    app: greencloud
+spec:
+  selector:
+    matchLabels:
+      app: greencloud
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 5s

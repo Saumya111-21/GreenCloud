@@ -2,10 +2,19 @@ apiVersion: v1
 kind: Service
 metadata:
   name: greencloud-service
+  labels:
+    app: greencloud
+    app.kubernetes.io/name: greencloud
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "5000"
+    prometheus.io/path: "/metrics"
 spec:
   type: LoadBalancer
   selector:
     app: greencloud
   ports:
-    - port: 8080
+    - name: http
+      port: 8080
       targetPort: 5000
+      protocol: TCP

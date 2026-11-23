@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: greencloud-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: greencloud
+  ports:
+    - port: 8080
+      targetPort: 5000

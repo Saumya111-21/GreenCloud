@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: greencloud
+  labels:
+    app: greencloud
+    app.kubernetes.io/name: greencloud
+    app.kubernetes.io/component: monitoring-dashboard
 spec:
   replicas: 2
   selector:
@@ -11,14 +15,51 @@ spec:
     metadata:
       labels:
         app: greencloud
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+        prometheus.io/path: "/metrics"
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
       containers:
         - name: greencloud
           image: greencloud:v5
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 5000
+            - name: http
+              containerPort: 5000
           
+          # Health and Readiness Probes
+          livenessProbe:
+            httpGet:
+              path: /api/snapshot
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/snapshot
+              port: 5000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
+
+          # Container Security Hardening
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+
+          # Resource Configuration (Right-Sized Base)
           resources:
             requests:
               cpu: "10m"
